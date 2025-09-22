@@ -88,10 +88,10 @@ app = FastAPI(
 
 # --- Configuration for API Keys ---
 # Groq API Key for LLM inference. Loaded from environment or hardcoded (for dev only).
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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") # **CHANGE THIS IN PRODUCTION**
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
 
 # API Key for securing FastAPI endpoints. Loaded from environment or hardcoded (for dev only).
-API_KEY = os.getenv("API_KEY", "YOUR_SECRET_API_KEY") # **CHANGE THIS IN PRODUCTION**
+API_KEY = os.getenv("API_KEY", "YOUR_SECRET_API_KEY") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def get_api_key(api_key: str = Depends(api_key_header)) -> str:
