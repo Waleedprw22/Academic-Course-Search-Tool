@@ -39,16 +39,16 @@ def load_and_combine_course_data() -> pd.DataFrame:
     Returns:
         pd.DataFrame: A DataFrame containing combined course information.
     """
-    print("Loading Brown University course data...")
+    logger.info("Loading Brown University course data...")
     brown_df = get_brown_courses_dataframe()
-    print(f"Brown University courses loaded: {len(brown_df)}")
+    logger.info(f"Brown University courses loaded: {len(brown_df)}")
 
-    print("Loading MIT OpenCourseWare data...")
+    logger.info("Loading MIT OpenCourseWare data...")
     mit_df = get_mit_courses_dataframe()
-    print(f"MIT OpenCourseWare courses loaded: {len(mit_df)}")
+    logger.info(f"MIT OpenCourseWare courses loaded: {len(mit_df)}")
 
     combined_df = pd.concat([brown_df, mit_df], ignore_index=True)
-    print(f"Total combined courses: {len(combined_df)}")
+    logger.info(f"Total combined courses: {len(combined_df)}")
     return combined_df
 
 def initialize_embedding_models() -> Dict[str, SentenceTransformer]:
@@ -58,12 +58,12 @@ def initialize_embedding_models() -> Dict[str, SentenceTransformer]:
     Returns:
         Dict[str, SentenceTransformer]: A dictionary mapping model names to their instances.
     """
-    print("Initializing embedding models...")
+    logger.info("Initializing embedding models...")
     models = {
         "MiniLM": SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2'),
         "MPNet": SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     }
-    print("Embedding models initialized.")
+    logger.info("Embedding models initialized.")
     return models
 
 def embed_course_data(df: pd.DataFrame, model: SentenceTransformer, model_name: str) -> pd.DataFrame:
@@ -228,8 +228,8 @@ def filtered_vector_search(query_embedding: List[float],
                 if item_metadata.get(key) != value:
                     match = False
                     break
-        if match:
-            filtered_results.append((item_metadata, score))
+            if match:
+                filtered_results.append((item_metadata, score))
     logger.debug(f"Applying filters took {(time.perf_counter() - start_time_filter_results) * 1000:.2f}ms")
     logger.debug(f"Finished filtered_vector_search in {(time.perf_counter() - start_time_func) * 1000:.2f}ms. Found {len(filtered_results)} results.")
     
