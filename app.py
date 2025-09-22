@@ -32,6 +32,16 @@ from evaluation import LABELED_DATASET, evaluate_rag_system
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
+# --- Configuration for API Keys ---
+# Groq API Key for LLM inference. Loaded from environment or hardcoded (for dev only).
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
+
+# API Key for securing FastAPI endpoints. Loaded from environment or hardcoded (for dev only).
+API_KEY = os.getenv("API_KEY", "YOUR_SECRET_API_KEY") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+
 # Global variables to store initialized embedding models, FAISS indices, and metadata DataFrames.
 # These are initialized once at application startup using the lifespan event.
 embedding_models = {}
@@ -86,13 +96,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# --- Configuration for API Keys ---
-# Groq API Key for LLM inference. Loaded from environment or hardcoded (for dev only).
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
-
-# API Key for securing FastAPI endpoints. Loaded from environment or hardcoded (for dev only).
-API_KEY = os.getenv("API_KEY", "YOUR_SECRET_API_KEY") # **CHANGE THIS IN PRODUCTION by creating .env file and moving the key there**
-api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def get_api_key(api_key: str = Depends(api_key_header)) -> str:
     """
